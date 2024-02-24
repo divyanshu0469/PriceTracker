@@ -5,7 +5,7 @@ import { connectToDB } from "@/lib/scraper/mongoose"
 import { getAveragePrice, getEmailNotifType, getHighestPrice, getLowestPrice } from "@/lib/scraper/utils";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 300; // 5 min
+export const maxDuration = 10; // 5 min
 export const dynamic = 'force-dynamic'
 export const revalidate = 0;
 
