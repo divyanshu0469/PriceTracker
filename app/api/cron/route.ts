@@ -6,12 +6,10 @@ import { getAveragePrice, getEmailNotifType, getHighestPrice, getLowestPrice } f
 import { NextResponse } from "next/server";
 
 export const maxDuration = 300; // 5 min
-
 export const dynamic = 'force-dynamic'
-
 export const revalidate = 0;
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         connectToDB;
 
@@ -29,8 +27,10 @@ export async function GET() {
 
                 const updatedPriceHistory: any = [
                     ...currentProduct.priceHistory,
-                    { price: scrapedProduct.currentPrice }
-                ]
+                    {
+                        price: scrapedProduct.currentPrice,
+                    },
+                ];
     
                 const product = {
                     ...scrapedProduct,
@@ -43,7 +43,7 @@ export async function GET() {
         
                 const updatedProduct = await Product.findOneAndUpdate(
                     { url: product.url },
-                    product,
+                    product
                 );
 
                 // 2. check each products status and send email accordingly
@@ -63,14 +63,14 @@ export async function GET() {
                     await sendEmail(emailContent, userEmails);
                 }
 
-                return updatedProduct
+                return updatedProduct;
             })
         )
 
         return NextResponse.json({
-            message: 'Ok', data: updatedProducts
-        })
-    } catch(error) {
-        throw new Error(`Error in GET: ${error}`)
+            message: 'Ok', data: updatedProducts,
+        });
+    } catch(error: any) {
+        throw new Error(`Error in GET: ${error.message}`)
     }
 }
